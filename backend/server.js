@@ -12,12 +12,24 @@ const plansRoutes = require("./routes/plans");
 const historyRoutes = require("./routes/history");
 
 const app = express();
+
 app.use(cors({
-  origin: "https://dietpaln-frontend-final.onrender.com"
+  origin: ["https://dietpaln-frontend-final.onrender.com"],
+  credentials: true
 }));
+
 app.use(express.json());
 
 app.use("/api/meal", mealRoutes);
 app.use("/api/grocery", groceryRoutes);
 app.use("/api/progress", progressRoutes);
-app.use("/api/
+app.use("/api/users", userRoutes);
+app.use("/api/recipes", recipesRoutes);
+app.use("/api/plans", plansRoutes);
+app.use("/api/history", historyRoutes);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () =>
+  console.log(`Backend running at http://localhost:${PORT}`)
+);
