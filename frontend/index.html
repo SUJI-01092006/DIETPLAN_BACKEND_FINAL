@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meal Planner - Home</title>
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  
+  <div class="main">
+    <div id="header"></div>
+    
+    <div class="content">
+      <div class="welcome-section">
+        <h1>Welcome to Your Meal Planner</h1>
+        <p>Plan your meals, track your nutrition, and stay healthy!</p>
+      </div>
+      
+      <div class="meal-stats">
+        <div class="stat-card">
+          <div class="stat-value">2000</div>
+          <div class="stat-label">Daily Calories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Meals Planned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Grocery Items</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">85%</div>
+          <div class="stat-label">Goal Progress</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>Quick Actions</h3>
+        <div class="quick-actions">
+          <a href="landing.html" class="action-btn">View Landing Page</a>
+          <a href="pages/meal.html" class="action-btn">Plan Meals</a>
+          <a href="pages/grocery.html" class="action-btn">View Grocery List</a>
+          <a href="pages/recipes.html" class="action-btn">Browse Recipes</a>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>Today's Overview</h3>
+        <p><strong>Breakfast:</strong> Oatmeal with berries (320 cal)</p>
+        <p><strong>Lunch:</strong> Grilled Chicken Salad (450 cal)</p>
+        <p><strong>Dinner:</strong> Salmon with vegetables (520 cal)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+fetch("components/sidebar.html").then(r=>r.text()).then(t=>{
+  sidebar.innerHTML = t.replace(/\.\.\/index\.html/g, 'index.html').replace(/href="([^"]+)\.html"/g, 'href="pages/$1.html"');
+});
+fetch("components/header.html").then(r=>r.text()).then(t=>{
+  header.innerHTML = t;
+  document.querySelector('.header-title').textContent = 'Home Dashboard';
+});
+</script>
+</body>
+</html>

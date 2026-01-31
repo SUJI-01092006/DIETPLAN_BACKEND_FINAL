@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Create Your Meal Plan | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <style>
+    .create-plan-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: transparent;
+      min-height: 100vh;
+    }
+    
+    .plan-wizard {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .wizard-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .wizard-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1b1e35;
+      margin-bottom: 10px;
+    }
+    
+    .wizard-subtitle {
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    .form-section {
+      margin-bottom: 40px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1b1e35;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #9c27b0;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .form-field {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .form-field:hover {
+      border-color: #9c27b0;
+      transform: translateY(-2px);
+    }
+    
+    .form-field label {
+      display: block;
+      font-weight: 600;
+      color: #1b1e35;
+      margin-bottom: 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #1b1e35;
+      background: white;
+      transition: border-color 0.3s;
+    }
+    
+    .form-field input:focus,
+    .form-field select:focus {
+      outline: none;
+      border-color: #9c27b0;
+    }
+    
+    .quick-templates {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .template-btn {
+      background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 14px;
+    }
+    
+    .template-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+    }
+    
+    .generate-btn {
+      background: linear-gradient(135deg, #f46708 0%, #ff8a50 100%);
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 30px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .generate-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(244, 103, 8, 0.4);
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    
+    .feature-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    
+    .feature-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1b1e35;
+      margin-bottom: 10px;
+    }
+    
+    .feature-desc {
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    .calculate-btn {
+      background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin: 20px 0;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .calculate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    }
+    
+    .auto-calculate-section {
+      text-align: center;
+      margin: 30px 0;
+    }
+    @media (max-width: 768px) {
+      .create-plan-container {
+        padding: 20px 10px;
+      }
+      
+      .plan-wizard {
+        padding: 20px;
+      }
+      
+      .wizard-title {
+        font-size: 24px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  
+  <div class="main">
+    <div class="content">
+      <div class="create-plan-container">
+  <div class="plan-wizard">
+    <div class="wizard-header">
+      <h1 class="wizard-title">Create Your Personalized Meal Plan</h1>
+      <p class="wizard-subtitle">
+        Set up your nutrition targets and let our intelligent meal planner find the perfect recipes to match your goals.
+        Whether you're looking to lose weight, build muscle, or maintain a healthy lifestyle, we'll create a plan just for you.
+      </p>
+    </div>
+
+    <form id="createPlanForm">
+      <div class="form-section">
+        <h2 class="section-title">Nutrition Targets</h2>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Current Weight (kg)</label>
+            <input type="number" id="currentWeight" placeholder="70" min="40" max="200" step="0.1">
+          </div>
+          <div class="form-field">
+            <label>Target Weight (kg)</label>
+            <input type="number" id="targetWeight" placeholder="65" min="40" max="200" step="0.1">
+          </div>
+          <div class="form-field">
+            <label>Height (cm)</label>
+            <input type="number" id="height" placeholder="170" min="120" max="220">
+          </div>
+          <div class="form-field">
+            <label>Age</label>
+            <input type="number" id="age" placeholder="30" min="16" max="80">
+          </div>
+          <div class="form-field">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Weight Loss Rate</label>
+            <select id="weightLossRate">
+              <option value="0.25">Slow (0.25 kg/week)</option>
+              <option value="0.5" selected>Moderate (0.5 kg/week)</option>
+              <option value="0.75">Fast (0.75 kg/week)</option>
+              <option value="1">Very Fast (1 kg/week)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="auto-calculate-section">
+          <button type="button" onclick="calculateNutrition()" class="calculate-btn">Calculate My Nutrition Needs</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Calculated Nutrition Targets</h2>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Daily Calories</label>
+            <input type="number" id="calories" placeholder="Will be calculated" readonly>
+          </div>
+          <div class="form-field">
+            <label>Protein (grams)</label>
+            <input type="number" id="protein" placeholder="Will be calculated" readonly>
+          </div>
+          <div class="form-field">
+            <label>Carbohydrates (grams)</label>
+            <input type="number" id="carbs" placeholder="Will be calculated" readonly>
+          </div>
+          <div class="form-field">
+            <label>Fat (grams)</label>
+            <input type="number" id="fat" placeholder="Will be calculated" readonly>
+          </div>
+          <div class="form-field">
+            <label>Fiber (grams)</label>
+            <input type="number" id="fiber" placeholder="Will be calculated" readonly>
+          </div>
+          <div class="form-field">
+            <label>Sugar Limit (grams)</label>
+            <input type="number" id="sugar" placeholder="Will be calculated" readonly>
+          </div>
+        </div>
+      </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Plan Duration</label>
+            <select id="duration">
+              <option value="7">7 Days (1 Week)</option>
+              <option value="14">14 Days (2 Weeks)</option>
+              <option value="30">30 Days (1 Month)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Meals Per Day</label>
+            <select id="mealsPerDay">
+              <option value="3">3 Main Meals</option>
+              <option value="4">3 Meals + 1 Snack</option>
+              <option value="5">3 Meals + 2 Snacks</option>
+              <option value="6">6 Small Meals</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Diet Type</label>
+            <select id="dietType">
+              <option value="balanced">Balanced Diet</option>
+              <option value="keto">Ketogenic (Keto)</option>
+              <option value="low-carb">Low Carb</option>
+              <option value="high-protein">High Protein</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="mediterranean">Mediterranean</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Activity Level</label>
+            <select id="activityLevel">
+              <option value="sedentary">Sedentary (Little/No Exercise)</option>
+              <option value="light">Light Activity (1-3 days/week)</option>
+              <option value="moderate">Moderate Activity (3-5 days/week)</option>
+              <option value="active">Very Active (6-7 days/week)</option>
+              <option value="extra">Extra Active (2x/day, intense)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="section-title">Quick Start Templates</h2>
+        <p class="wizard-subtitle">Choose a pre-configured plan to get started quickly, or customize your own above.</p>
+        <div class="quick-templates">
+          <button type="button" onclick="useTemplate('weight-loss')" class="template-btn">Weight Loss Plan</button>
+          <button type="button" onclick="useTemplate('muscle-gain')" class="template-btn">Muscle Building</button>
+          <button type="button" onclick="useTemplate('maintenance')" class="template-btn">Maintenance</button>
+          <button type="button" onclick="useTemplate('keto')" class="template-btn">Keto Diet</button>
+        </div>
+      </div>
+
+      <button type="submit" class="generate-btn">Generate My Personalized Meal Plan</button>
+    </form>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">Target</div>
+      <h3 class="feature-title">Personalized Nutrition</h3>
+      <p class="feature-desc">Tailored calorie and macro targets based on your goals, activity level, and dietary preferences.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">Meals</div>
+      <h3 class="feature-title">Smart Meal Matching</h3>
+      <p class="feature-desc">Our algorithm finds recipes that perfectly match your nutrition targets automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">Mobile</div>
+      <h3 class="feature-title">Easy to Follow</h3>
+      <p class="feature-desc">Download your plan as PDF, sync with your calendar, and get grocery lists generated automatically.</p>
+    </div>
+  </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Load sidebar
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+// Calculate nutrition based on user metrics and weight loss goals
+function calculateNutrition() {
+  const currentWeight = parseFloat(document.getElementById('currentWeight').value);
+  const targetWeight = parseFloat(document.getElementById('targetWeight').value);
+  const height = parseFloat(document.getElementById('height').value);
+  const age = parseFloat(document.getElementById('age').value);
+  const gender = document.getElementById('gender').value;
+  const weightLossRate = parseFloat(document.getElementById('weightLossRate').value);
+  const activityLevel = document.getElementById('activityLevel').value;
+  
+  if (!currentWeight || !height || !age) {
+    alert('Please fill in your current weight, height, and age first.');
+    return;
+  }
+  
+  // Calculate BMR using Mifflin-St Jeor Equation
+  let bmr;
+  if (gender === 'male') {
+    bmr = 10 * currentWeight + 6.25 * height - 5 * age + 5;
+  } else {
+    bmr = 10 * currentWeight + 6.25 * height - 5 * age - 161;
+  }
+  
+  // Activity multipliers
+  const activityMultipliers = {
+    'sedentary': 1.2,
+    'light': 1.375,
+    'moderate': 1.55,
+    'active': 1.725,
+    'extra': 1.9
+  };
+  
+  // Calculate TDEE
+  const tdee = bmr * activityMultipliers[activityLevel];
+  
+  // Calculate calorie deficit for weight loss (1 kg = 7700 calories)
+  const weeklyDeficit = weightLossRate * 7700;
+  const dailyDeficit = weeklyDeficit / 7;
+  const targetCalories = Math.round(tdee - dailyDeficit);
+  
+  // Ensure minimum calories
+  const minCalories = gender === 'male' ? 1500 : 1200;
+  const finalCalories = Math.max(targetCalories, minCalories);
+  
+  // Calculate macros for weight loss
+  const proteinPerKg = 2.2; // High protein for weight loss
+  const protein = Math.round(currentWeight * proteinPerKg);
+  
+  // Fat: 25-30% of calories
+  const fatCalories = finalCalories * 0.27;
+  const fat = Math.round(fatCalories / 9);
+  
+  // Carbs: remaining calories
+  const proteinCalories = protein * 4;
+  const remainingCalories = finalCalories - proteinCalories - fatCalories;
+  const carbs = Math.round(remainingCalories / 4);
+  
+  // Fiber: 14g per 1000 calories
+  const fiber = Math.round((finalCalories / 1000) * 14);
+  
+  // Sugar limit: 10% of total calories
+  const sugar = Math.round((finalCalories * 0.1) / 4);
+  
+  // Update form fields
+  document.getElementById('calories').value = finalCalories;
+  document.getElementById('protein').value = protein;
+  document.getElementById('carbs').value = carbs;
+  document.getElementById('fat').value = fat;
+  document.getElementById('fiber').value = fiber;
+  document.getElementById('sugar').value = sugar;
+  
+  // Show success message
+  const btn = document.querySelector('.calculate-btn');
+  const originalText = btn.textContent;
+  btn.textContent = '✅ Nutrition Calculated!';
+  btn.style.background = 'linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%)';
+  
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.style.background = 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)';
+  }, 2000);
+}
+const templates = {
+  'weight-loss': { 
+    calories: 1600, 
+    protein: 120, 
+    carbs: 120, 
+    fat: 60, 
+    dietType: 'low-carb',
+    mealsPerDay: '4',
+    activityLevel: 'moderate'
+  },
+  'muscle-gain': { 
+    calories: 2800, 
+    protein: 200, 
+    carbs: 300, 
+    fat: 100, 
+    dietType: 'high-protein',
+    mealsPerDay: '5',
+    activityLevel: 'active'
+  },
+  'maintenance': { 
+    calories: 2200, 
+    protein: 150, 
+    carbs: 220, 
+    fat: 85, 
+    dietType: 'balanced',
+    mealsPerDay: '3',
+    activityLevel: 'moderate'
+  },
+  'keto': { 
+    calories: 2000, 
+    protein: 120, 
+    carbs: 25, 
+    fat: 170, 
+    dietType: 'keto',
+    mealsPerDay: '3',
+    activityLevel: 'light'
+  }
+};
+
+function useTemplate(type) {
+  const template = templates[type];
+  document.getElementById('calories').value = template.calories;
+  document.getElementById('protein').value = template.protein;
+  document.getElementById('carbs').value = template.carbs;
+  document.getElementById('fat').value = template.fat;
+  document.getElementById('dietType').value = template.dietType;
+  document.getElementById('mealsPerDay').value = template.mealsPerDay;
+  document.getElementById('activityLevel').value = template.activityLevel;
+  
+  // Visual feedback
+  document.querySelectorAll('.template-btn').forEach(btn => btn.style.background = 'linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%)');
+  event.target.style.background = 'linear-gradient(135deg, #f46708 0%, #ff8a50 100%)';
+}
+
+// Load existing plan data if available
+function loadExistingPlan() {
+  const currentPlan = localStorage.getItem('currentPlan');
+  if (currentPlan) {
+    const plan = JSON.parse(currentPlan);
+    document.getElementById('calories').value = plan.calories || '';
+    document.getElementById('protein').value = plan.protein || '';
+    document.getElementById('carbs').value = plan.carbs || '';
+    document.getElementById('fat').value = plan.fat || '';
+    document.getElementById('duration').value = plan.duration || '7';
+    document.getElementById('mealsPerDay').value = plan.mealsPerDay || '4';
+    document.getElementById('dietType').value = plan.dietType || 'balanced';
+    document.getElementById('activityLevel').value = plan.activityLevel || 'moderate';
+  }
+}
+
+// Load plan on page load
+window.addEventListener('load', loadExistingPlan);
+
+document.getElementById('createPlanForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const planData = {
+    calories: parseInt(document.getElementById('calories').value) || 2000,
+    protein: parseInt(document.getElementById('protein').value) || 150,
+    carbs: parseInt(document.getElementById('carbs').value) || 200,
+    fat: parseInt(document.getElementById('fat').value) || 80,
+    duration: document.getElementById('duration').value,
+    mealsPerDay: document.getElementById('mealsPerDay').value,
+    dietType: document.getElementById('dietType').value,
+    activityLevel: document.getElementById('activityLevel').value,
+    createdAt: new Date().toISOString(),
+    planName: `${document.getElementById('dietType').value.charAt(0).toUpperCase() + document.getElementById('dietType').value.slice(1)} Plan - ${document.getElementById('calories').value || 2000} cal`
+  };
+  
+  // Store the plan
+  localStorage.setItem('currentPlan', JSON.stringify(planData));
+  
+  // Add to history
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (userData && userData.email) {
+    const userHistoryKey = `mealPlanHistory_${userData.email}`;
+    const history = JSON.parse(localStorage.getItem(userHistoryKey)) || [];
+    const historyItem = {
+      id: Date.now(),
+      type: 'plan',
+      name: planData.planName,
+      date: new Date().toLocaleDateString(),
+      data: planData
+    };
+    history.unshift(historyItem);
+    localStorage.setItem(userHistoryKey, JSON.stringify(history.slice(0, 50)));
+    localStorage.setItem('mealPlanHistory', JSON.stringify(history.slice(0, 50)));
+  }
+  
+  // Show success message
+  const btn = document.querySelector('.generate-btn');
+  const originalText = btn.textContent;
+  btn.textContent = '✅ Meal Plan Created Successfully!';
+  btn.style.background = 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)';
+  
+  setTimeout(() => {
+    window.location.href = '../pages/meal.html';
+  }, 1500);
+});
+</script>
+
+</body>
+</html>

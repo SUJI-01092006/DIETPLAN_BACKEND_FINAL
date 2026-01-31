@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progress | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  
+  <div class="main">
+    <div class="content">
+      <div class="progress-header">
+        <h1>Progress Tracking</h1>
+        <div class="progress-controls">
+          <button class="btn-export-data">Export Data</button>
+          <button class="btn-reset-data">Reset All</button>
+        </div>
+      </div>
+
+      <div class="progress-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="current-weight">--</span>
+          <span class="stat-label">Current Weight (kg)</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="weight-change">--</span>
+          <span class="stat-label">Weight Change (kg)</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="days-tracked">--</span>
+          <span class="stat-label">Days Tracked</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="avg-calories">--</span>
+          <span class="stat-label">Avg Daily Calories</span>
+        </div>
+      </div>
+
+      <div class="progress-sections">
+        <div class="progress-section">
+          <h3>Weight Tracking</h3>
+          <div class="weight-input">
+            <input type="number" id="weight-input" placeholder="Enter weight (kg)" step="0.1">
+            <input type="date" id="weight-date">
+            <button onclick="addWeightEntry()">Add Entry</button>
+          </div>
+          <div class="horizontal-charts">
+            <div class="chart-item">
+              <label>Weight Progress</label>
+              <div class="horizontal-bar">
+                <div class="bar-fill weight-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="chart-item">
+              <label>Calories Goal</label>
+              <div class="horizontal-bar">
+                <div class="bar-fill calories-bar" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="chart-item">
+              <label>Weekly Target</label>
+              <div class="horizontal-bar">
+                <div class="bar-fill target-bar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="weight-history" id="weight-history"></div>
+        </div>
+
+        <div class="progress-section">
+          <h3>Body Measurements</h3>
+          <div class="measurements-grid">
+            <div class="measurement-item">
+              <label>Waist (cm)</label>
+              <input type="number" id="waist" placeholder="0" step="0.1">
+            </div>
+            <div class="measurement-item">
+              <label>Chest (cm)</label>
+              <input type="number" id="chest" placeholder="0" step="0.1">
+            </div>
+            <div class="measurement-item">
+              <label>Hips (cm)</label>
+              <input type="number" id="hips" placeholder="0" step="0.1">
+            </div>
+            <div class="measurement-item">
+              <label>Arms (cm)</label>
+              <input type="number" id="arms" placeholder="0" step="0.1">
+            </div>
+          </div>
+          <button onclick="saveMeasurements()">Save Measurements</button>
+        </div>
+
+        <div class="progress-section">
+          <h3>Goals & Targets</h3>
+          <div class="goals-grid">
+            <div class="goal-item">
+              <label>Target Weight (kg)</label>
+              <input type="number" id="target-weight" placeholder="0" step="0.1">
+            </div>
+            <div class="goal-item">
+              <label>Target Date</label>
+              <input type="date" id="target-date">
+            </div>
+            <div class="goal-item">
+              <label>Weekly Goal (kg/week)</label>
+              <input type="number" id="weekly-goal" placeholder="0.5" step="0.1">
+            </div>
+          </div>
+          <button onclick="saveGoals()">Save Goals</button>
+          <div class="goal-progress" id="goal-progress"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+// Load components
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+
+// Progress data
+let progressData = JSON.parse(localStorage.getItem('progressData')) || {
+  weightEntries: [],
+  measurements: {},
+  goals: {}
+};
+
+// Set today's date as default
+document.getElementById('weight-date').value = new Date().toISOString().split('T')[0];
+
+// Add weight entry
+async function addWeightEntry() {
+  const weight = parseFloat(document.getElementById('weight-input').value);
+  const date = document.getElementById('weight-date').value;
+  
+  if (!weight || !date) {
+    alert('Please enter both weight and date');
+    return;
+  }
+  
+  const weightEntry = { weight, date };
+  progressData.weightEntries.push(weightEntry);
+  progressData.weightEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  localStorage.setItem('progressData', JSON.stringify(progressData));
+  
+  // Save to database via API
+  try {
+    await api.addWeightEntry(weightEntry);
+  } catch (error) {
+    console.error('Error saving weight to database:', error);
+  }
+  
+  document.getElementById('weight-input').value = '';
+  updateDisplay();
+}
+
+// Save measurements
+async function saveMeasurements() {
+  const measurements = {
+    waist: parseFloat(document.getElementById('waist').value) || 0,
+    chest: parseFloat(document.getElementById('chest').value) || 0,
+    hips: parseFloat(document.getElementById('hips').value) || 0,
+    arms: parseFloat(document.getElementById('arms').value) || 0,
+    date: new Date().toISOString().split('T')[0]
+  };
+  
+  progressData.measurements = measurements;
+  localStorage.setItem('progressData', JSON.stringify(progressData));
+  
+  // Save to database via API
+  try {
+    await api.saveProgress({ measurements });
+  } catch (error) {
+    console.error('Error saving measurements to database:', error);
+  }
+  
+  alert('Measurements saved!');
+}
+
+// Save goals
+async function saveGoals() {
+  const goals = {
+    targetWeight: parseFloat(document.getElementById('target-weight').value) || 0,
+    targetDate: document.getElementById('target-date').value,
+    weeklyGoal: parseFloat(document.getElementById('weekly-goal').value) || 0.5
+  };
+  
+  progressData.goals = goals;
+  localStorage.setItem('progressData', JSON.stringify(progressData));
+  
+  // Save to database via API
+  try {
+    await api.saveProgress({ goals });
+  } catch (error) {
+    console.error('Error saving goals to database:', error);
+  }
+  
+  updateGoalProgress();
+  alert('Goals saved!');
+}
+
+// Update display
+function updateDisplay() {
+  const entries = progressData.weightEntries;
+  
+  if (entries.length > 0) {
+    const current = entries[entries.length - 1].weight;
+    const change = entries.length > 1 ? current - entries[0].weight : 0;
+    
+    document.getElementById('current-weight').textContent = current.toFixed(1);
+    document.getElementById('weight-change').textContent = (change >= 0 ? '+' : '') + change.toFixed(1);
+    document.getElementById('days-tracked').textContent = entries.length;
+  }
+  
+  updateWeightHistory();
+  updateGoalProgress();
+  drawWeightChart();
+}
+
+// Update weight history
+function updateWeightHistory() {
+  const history = document.getElementById('weight-history');
+  const entries = progressData.weightEntries.slice(-10).reverse();
+  
+  history.innerHTML = entries.map(entry => 
+    `<div class="history-item">
+      <span>${entry.date}</span>
+      <span>${entry.weight} kg</span>
+    </div>`
+  ).join('');
+}
+
+// Update goal progress
+function updateGoalProgress() {
+  const goals = progressData.goals;
+  const entries = progressData.weightEntries;
+  
+  if (!goals.targetWeight || entries.length === 0) return;
+  
+  const current = entries[entries.length - 1].weight;
+  const remaining = Math.abs(goals.targetWeight - current);
+  const progress = Math.max(0, 100 - (remaining / Math.abs(goals.targetWeight - (entries[0]?.weight || current)) * 100));
+  
+  document.getElementById('goal-progress').innerHTML = `
+    <div class="progress-bar">
+      <div class="progress-fill" style="width: ${progress}%"></div>
+    </div>
+    <p>Progress: ${progress.toFixed(1)}% • Remaining: ${remaining.toFixed(1)} kg</p>
+  `;
+}
+
+// Simple chart drawing
+function drawWeightChart() {
+  const entries = progressData.weightEntries;
+  
+  if (entries.length === 0) return;
+  
+  // Weight progress (based on goal achievement)
+  const goals = progressData.goals;
+  let weightProgress = 0;
+  if (goals.targetWeight && entries.length > 0) {
+    const current = entries[entries.length - 1].weight;
+    const start = entries[0]?.weight || current;
+    const totalChange = Math.abs(goals.targetWeight - start);
+    const currentChange = Math.abs(start - current);
+    weightProgress = Math.min(100, (currentChange / totalChange) * 100);
+  }
+  
+  // Calories progress (mock data - could be based on meal plans)
+  const caloriesProgress = Math.random() * 100;
+  
+  // Weekly target progress
+  const targetProgress = Math.random() * 100;
+  
+  // Update bars
+  document.querySelector('.weight-bar').style.width = `${weightProgress}%`;
+  document.querySelector('.calories-bar').style.width = `${caloriesProgress}%`;
+  document.querySelector('.target-bar').style.width = `${targetProgress}%`;
+}
+
+// Load saved data
+if (progressData.measurements.waist) {
+  document.getElementById('waist').value = progressData.measurements.waist;
+  document.getElementById('chest').value = progressData.measurements.chest;
+  document.getElementById('hips').value = progressData.measurements.hips;
+  document.getElementById('arms').value = progressData.measurements.arms;
+}
+
+if (progressData.goals.targetWeight) {
+  document.getElementById('target-weight').value = progressData.goals.targetWeight;
+  document.getElementById('target-date').value = progressData.goals.targetDate;
+  document.getElementById('weekly-goal').value = progressData.goals.weeklyGoal;
+}
+
+// Initialize display
+updateDisplay();
+</script>
+
+</body>
+</html>

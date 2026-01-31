@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Log In | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <div class="app-background">
+    <div class="app-main">
+      <div class="inner-maximum-width">
+        <div class="auth-content">
+          <div class="auth-title-signup">Log In</div>
+          
+
+          
+          <form id="loginForm">
+            <div class="block-wrapper">
+              <div class="text">Email</div>
+              <input type="email" id="email" required>
+            </div>
+            
+            <div class="block-wrapper">
+              <div class="text">Password</div>
+              <input type="password" id="password" required>
+            </div>
+            
+            <div class="forgot-password">
+              <a href="#">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="continue-text">Continue</button>
+          </form>
+          
+          <div class="already-have-account">
+            <a href="signup.html">Don't have an account? Sign up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (email && password) {
+        try {
+          // Authenticate with database
+          const response = await fetch('https://dietplan-backend-final.onrender.com/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
+
+          if (response.ok) {
+            const user = await response.json();
+            
+            // Load user-specific history
+            const userHistoryKey = `mealPlanHistory_${email}`;
+            const userHistory = localStorage.getItem(userHistoryKey);
+            if (userHistory) {
+              localStorage.setItem('mealPlanHistory', userHistory);
+            } else {
+              localStorage.removeItem('mealPlanHistory');
+            }
+            
+            // Set login status and user data
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userData', JSON.stringify({
+              _id: user._id,
+              email: email,
+              name: user.name,
+              goal: user.goal,
+              loginAt: new Date().toISOString()
+            }));
+            
+            // Update sidebar if function exists
+            if (window.updateAuthLink) {
+              window.updateAuthLink();
+            }
+            
+            window.location.href = 'index.html';
+          } else {
+            const errorData = await response.json();
+            if (response.status === 401) {
+              alert('Invalid email or password. Please check your credentials and try again.');
+            } else {
+              alert('Login failed: ' + (errorData.error || 'Unknown error'));
+            }
+          }
+        } catch (error) {
+          alert('Network error. Please check if the server is running and try again.');
+        }
+      }
+    });
+  </script>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2023 My Diet Meal Plan. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

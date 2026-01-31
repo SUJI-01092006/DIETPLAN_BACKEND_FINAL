@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>Grocery List | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/grocery-list.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  
+  <div class="main">
+    <div id="header"></div>
+    
+    <div class="content">
+      <div class="grocery-header">
+        <h1>🛒 Grocery List</h1>
+        <div class="grocery-controls">
+          <button class="btn-generate-list">Generate from Meal Plan</button>
+          <button class="btn-download-list">Download List</button>
+          <button class="btn-clear-list">Clear All</button>
+        </div>
+      </div>
+
+      <div class="grocery-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="total-items">0</span>
+          <span class="stat-label">Total Items</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="checked-items">0</span>
+          <span class="stat-label">Checked Off</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="estimated-cost">$0</span>
+          <span class="stat-label">Est. Cost</span>
+        </div>
+      </div>
+
+      <div class="grocery-sections">
+        <div class="grocery-section">
+          <h3>🥩 Proteins</h3>
+          <div class="grocery-items" data-category="proteins">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <button class="add-item-btn" data-category="proteins">+ Add Item</button>
+        </div>
+
+        <div class="grocery-section">
+          <h3>🥬 Vegetables</h3>
+          <div class="grocery-items" data-category="vegetables">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <button class="add-item-btn" data-category="vegetables">+ Add Item</button>
+        </div>
+
+        <div class="grocery-section">
+          <h3>🍎 Fruits</h3>
+          <div class="grocery-items" data-category="fruits">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <button class="add-item-btn" data-category="fruits">+ Add Item</button>
+        </div>
+
+        <div class="grocery-section">
+          <h3>🌾 Grains & Carbs</h3>
+          <div class="grocery-items" data-category="grains">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <button class="add-item-btn" data-category="grains">+ Add Item</button>
+        </div>
+
+        <div class="grocery-section">
+          <h3>🥛 Dairy</h3>
+          <div class="grocery-items" data-category="dairy">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <button class="add-item-btn" data-category="dairy">+ Add Item</button>
+        </div>
+
+        <div class="grocery-section">
+          <h3>🧂 Pantry Items</h3>
+          <div class="grocery-items" data-category="pantry">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+          <button class="add-item-btn" data-category="pantry">+ Add Item</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/grocery-list.js"></script>
+<script>
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+fetch("../components/header.html").then(r=>r.text()).then(t=>{
+  header.innerHTML = t;
+  document.querySelector('.header-title').textContent = '🛒 Grocery List';
+});
+</script>
+
+</body>
+</html>

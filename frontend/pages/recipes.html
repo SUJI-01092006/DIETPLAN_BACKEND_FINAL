@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recipes | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/recipes.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  
+  <div class="main">
+    <div class="content">
+      <div class="recipes-header">
+        <h1>Recipe Collection</h1>
+        <div class="recipes-controls">
+          <button class="btn-add-recipe">Add Recipe</button>
+          <button class="btn-import-recipes">Import Recipes</button>
+          <button class="btn-export-recipes">Export All</button>
+        </div>
+      </div>
+
+      <div class="recipes-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="total-recipes">0</span>
+          <span class="stat-label">Total Recipes</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="saved-recipes">0</span>
+          <span class="stat-label">Saved Recipes</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="avg-calories">0</span>
+          <span class="stat-label">Avg Calories</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="categories">0</span>
+          <span class="stat-label">Categories</span>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <input type="text" id="recipe-search" placeholder="Search recipes..." onkeyup="filterRecipes()">
+        <button onclick="clearSearch()">Clear</button>
+      </div>
+
+      <div class="recipe-sections">
+        <div class="recipe-section">
+          <h3>Breakfast</h3>
+          <div class="recipe-items" data-category="breakfast">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="recipe-section">
+          <h3>Lunch</h3>
+          <div class="recipe-items" data-category="lunch">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="recipe-section">
+          <h3>Dinner</h3>
+          <div class="recipe-items" data-category="dinner">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="recipe-section">
+          <h3>Snacks</h3>
+          <div class="recipe-items" data-category="snack">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="recipe-section">
+          <h3>Vegetarian</h3>
+          <div class="recipe-items" data-category="vegetarian">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="recipe-section">
+          <h3>Low Carb</h3>
+          <div class="recipe-items" data-category="low-carb">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recipe Modal -->
+<div id="recipe-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modal-recipe-content"></div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+// Load components
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+
+// Recipe database - will be loaded from server
+let recipes = [];
+let currentUserId = null;
+
+// Load user data and recipes
+async function loadUserRecipes() {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (!userData || !userData.email) {
+    alert('Please log in to view recipes');
+    window.location.href = '../login.html';
+    return;
+  }
+  
+  try {
+    // Get user ID from login
+    const loginResponse = await fetch('http://localhost:5000/api/users/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: userData.email, password: 'temp' })
+    });
+    
+    // For now, use email as userId (simplified)
+    currentUserId = userData.email;
+    
+    // Load recipes from server
+    const response = await fetch(`http://localhost:5000/api/recipes/${encodeURIComponent(currentUserId)}`);
+    if (response.ok) {
+      const serverRecipes = await response.json();
+      recipes = [...defaultRecipes, ...serverRecipes];
+    } else {
+      recipes = [...defaultRecipes];
+    }
+  } catch (error) {
+    console.error('Error loading recipes:', error);
+    recipes = [...defaultRecipes];
+  }
+  
+  displayRecipes();
+}
+
+// Default recipes
+const defaultRecipes = [
+  {
+    id: 1,
+    name: "Greek Yogurt Parfait",
+    category: "breakfast",
+    tags: ["vegetarian", "high-protein"],
+    calories: 280,
+    time: "5 min",
+    description: "Creamy Greek yogurt layered with fresh berries and granola",
+    ingredients: ["1 cup Greek yogurt", "1/2 cup mixed berries", "1/4 cup granola", "1 tbsp honey"],
+    instructions: ["Layer yogurt in glass", "Add berries", "Top with granola", "Drizzle with honey"]
+  },
+  {
+    id: 2,
+    name: "Avocado Toast",
+    category: "breakfast",
+    tags: ["vegetarian", "healthy"],
+    calories: 320,
+    time: "10 min",
+    description: "Whole grain toast topped with mashed avocado and seasonings",
+    ingredients: ["2 slices whole grain bread", "1 ripe avocado", "Salt and pepper", "Lemon juice", "Red pepper flakes"],
+    instructions: ["Toast bread", "Mash avocado with lemon", "Season with salt and pepper", "Spread on toast", "Sprinkle red pepper flakes"]
+  },
+  {
+    id: 3,
+    name: "Quinoa Buddha Bowl",
+    category: "lunch",
+    tags: ["vegetarian", "high-protein", "gluten-free"],
+    calories: 450,
+    time: "25 min",
+    description: "Nutritious bowl with quinoa, roasted vegetables, and tahini dressing",
+    ingredients: ["1 cup cooked quinoa", "Mixed vegetables", "Chickpeas", "Tahini", "Lemon juice", "Spinach"],
+    instructions: ["Cook quinoa", "Roast vegetables", "Make tahini dressing", "Assemble bowl", "Drizzle with dressing"]
+  },
+  {
+    id: 4,
+    name: "Grilled Chicken Salad",
+    category: "lunch",
+    tags: ["high-protein", "low-carb"],
+    calories: 380,
+    time: "20 min",
+    description: "Fresh mixed greens with grilled chicken and balsamic vinaigrette",
+    ingredients: ["Chicken breast", "Mixed greens", "Cherry tomatoes", "Cucumber", "Balsamic vinegar", "Olive oil"],
+    instructions: ["Season and grill chicken", "Prepare salad greens", "Make vinaigrette", "Slice chicken", "Toss and serve"]
+  },
+  {
+    id: 5,
+    name: "Salmon with Asparagus",
+    category: "dinner",
+    tags: ["high-protein", "low-carb", "omega-3"],
+    calories: 420,
+    time: "30 min",
+    description: "Pan-seared salmon with roasted asparagus and lemon",
+    ingredients: ["Salmon fillet", "Asparagus", "Lemon", "Olive oil", "Garlic", "Herbs"],
+    instructions: ["Season salmon", "Prepare asparagus", "Heat pan", "Cook salmon", "Roast asparagus", "Serve with lemon"]
+  },
+  {
+    id: 6,
+    name: "Mixed Nuts",
+    category: "snack",
+    tags: ["vegetarian", "high-protein", "keto"],
+    calories: 180,
+    time: "0 min",
+    description: "A handful of mixed nuts for a healthy snack",
+    ingredients: ["Almonds", "Walnuts", "Cashews", "Pecans"],
+    instructions: ["Mix nuts in bowl", "Portion into serving size"]
+  }
+];
+
+let currentSearch = '';
+
+// Initialize recipes display
+function displayRecipes() {
+  const categories = ['breakfast', 'lunch', 'dinner', 'snack', 'vegetarian', 'low-carb'];
+  
+  categories.forEach(category => {
+    const container = document.querySelector(`[data-category="${category}"]`);
+    let categoryRecipes = recipes.filter(recipe => 
+      recipe.category === category || recipe.tags.includes(category)
+    );
+    
+    if (currentSearch) {
+      categoryRecipes = categoryRecipes.filter(recipe =>
+        recipe.name.toLowerCase().includes(currentSearch) ||
+        recipe.description.toLowerCase().includes(currentSearch)
+      );
+    }
+    
+    container.innerHTML = categoryRecipes.map(recipe => `
+      <div class="recipe-item" onclick="showRecipeModal(${recipe.id})">
+        <div class="recipe-info">
+          <h4>${recipe.name}</h4>
+          <p>${recipe.description}</p>
+          <div class="recipe-meta">
+            <span>${recipe.calories} cal</span>
+            <span>${recipe.time}</span>
+          </div>
+        </div>
+        <button class="add-to-plan-btn" onclick="event.stopPropagation(); addToMealPlan(${recipe.id})">Add</button>
+      </div>
+    `).join('');
+  });
+  
+  updateStats();
+}
+
+// Update statistics
+function updateStats() {
+  document.getElementById('total-recipes').textContent = recipes.length;
+  document.getElementById('saved-recipes').textContent = JSON.parse(localStorage.getItem('savedRecipes') || '[]').length;
+  document.getElementById('avg-calories').textContent = Math.round(recipes.reduce((sum, r) => sum + r.calories, 0) / recipes.length);
+  document.getElementById('categories').textContent = [...new Set(recipes.map(r => r.category))].length;
+}
+
+// Search recipes
+function filterRecipes() {
+  currentSearch = document.getElementById('recipe-search').value.toLowerCase();
+  displayRecipes();
+}
+
+// Clear search
+function clearSearch() {
+  document.getElementById('recipe-search').value = '';
+  currentSearch = '';
+  displayRecipes();
+}
+
+// Show recipe modal
+function showRecipeModal(recipeId) {
+  const recipe = recipes.find(r => r.id === recipeId);
+  if (!recipe) return;
+  
+  const modalContent = document.getElementById('modal-recipe-content');
+  modalContent.innerHTML = `
+    <div class="modal-recipe">
+      <div class="modal-header">
+        <h2>${recipe.name}</h2>
+        <div class="modal-stats">
+          <span class="calories">${recipe.calories} calories</span>
+          <span class="time">${recipe.time}</span>
+        </div>
+      </div>
+      
+      <div class="modal-body">
+        <p class="description">${recipe.description}</p>
+        
+        <div class="modal-section">
+          <h3>Ingredients</h3>
+          <ul class="ingredients-list">
+            ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+          </ul>
+        </div>
+        
+        <div class="modal-section">
+          <h3>Instructions</h3>
+          <ol class="instructions-list">
+            ${recipe.instructions.map(step => `<li>${step}</li>`).join('')}
+          </ol>
+        </div>
+        
+        <div class="modal-tags">
+          ${recipe.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        </div>
+        
+        <div class="modal-actions">
+          <button onclick="addToMealPlan(${recipe.id})" class="add-to-plan-btn">Add to Meal Plan</button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('recipe-modal').style.display = 'block';
+}
+
+// Close modal
+function closeModal() {
+  document.getElementById('recipe-modal').style.display = 'none';
+}
+
+// Add recipe to meal plan
+async function addToMealPlan(recipeId) {
+  const recipe = recipes.find(r => r.id === recipeId);
+  if (!recipe) return;
+  
+  let savedRecipes = JSON.parse(localStorage.getItem('savedRecipes')) || [];
+  if (!savedRecipes.find(r => r.id === recipeId)) {
+    savedRecipes.push(recipe);
+    localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+    
+    // Save to database
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (userData && userData._id) {
+      fetch(`http://localhost:5000/api/history/${userData._id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'recipes', name: recipe.name, data: recipe })
+      }).catch(error => console.error('Database save failed:', error));
+    }
+    
+    // Add to local history as backup
+    if (userData && userData.email) {
+      const userHistoryKey = `mealPlanHistory_${userData.email}`;
+      const history = JSON.parse(localStorage.getItem(userHistoryKey)) || [];
+      history.unshift({
+        id: Date.now().toString(),
+        type: 'recipes',
+        name: recipe.name,
+        date: new Date().toISOString(),
+        data: recipe
+      });
+      localStorage.setItem(userHistoryKey, JSON.stringify(history.slice(0, 50)));
+      localStorage.setItem('mealPlanHistory', JSON.stringify(history.slice(0, 50)));
+    }
+    
+    alert(`${recipe.name} added to your saved recipes!`);
+    updateStats();
+  } else {
+    alert(`${recipe.name} is already in your saved recipes.`);
+  }
+  
+  closeModal();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('recipe-modal');
+  if (event.target === modal) {
+    closeModal();
+  }
+}
+
+// Initialize page
+loadUserRecipes();
+
+// Add Recipe functionality
+document.querySelector('.btn-add-recipe').addEventListener('click', async function() {
+  if (!currentUserId) {
+    alert('Please log in to add recipes');
+    return;
+  }
+  
+  const name = prompt('Recipe Name:');
+  if (!name) return;
+  
+  const category = prompt('Category (breakfast/lunch/dinner/snack):');
+  if (!category) return;
+  
+  const calories = parseInt(prompt('Calories:'));
+  if (!calories) return;
+  
+  const time = prompt('Prep Time (e.g., "15 min"):');
+  if (!time) return;
+  
+  const description = prompt('Description:');
+  if (!description) return;
+  
+  const newRecipe = {
+    userId: currentUserId,
+    name: name,
+    category: category.toLowerCase(),
+    tags: [],
+    calories: calories,
+    time: time,
+    description: description,
+    ingredients: ['Add ingredients...'],
+    instructions: ['Add instructions...'],
+    saved: true
+  };
+  
+  try {
+    const response = await fetch('http://localhost:5000/api/recipes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newRecipe)
+    });
+    
+    if (response.ok) {
+      const savedRecipe = await response.json();
+      recipes.push(savedRecipe);
+      displayRecipes();
+      alert('Recipe added successfully!');
+    } else {
+      alert('Error saving recipe to database');
+    }
+  } catch (error) {
+    alert('Network error: ' + error.message);
+  }
+});
+
+// Import Recipes functionality
+document.querySelector('.btn-import-recipes').addEventListener('click', function() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const importedRecipes = JSON.parse(e.target.result);
+        if (Array.isArray(importedRecipes)) {
+          recipes.push(...importedRecipes);
+          displayRecipes();
+          alert(`Imported ${importedRecipes.length} recipes successfully!`);
+        } else {
+          alert('Invalid file format. Please select a valid JSON file.');
+        }
+      } catch (error) {
+        alert('Error reading file: ' + error.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+  
+  input.click();
+});
+
+// Export All functionality
+document.querySelector('.btn-export-recipes').addEventListener('click', function() {
+  const dataStr = JSON.stringify(recipes, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(dataBlob);
+  link.download = 'recipes.json';
+  link.click();
+  
+  alert('Recipes exported successfully!');
+});
+</script>
+
+</body>
+</html>

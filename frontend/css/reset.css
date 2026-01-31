@@ -1,0 +1,27 @@
+/* CSS Reset to fix red text issues */
+* {
+  color: inherit !important;
+}
+
+body {
+  color: #1b1e35 !important;
+}
+
+input, select, textarea, button {
+  color: #1b1e35 !important;
+}
+
+input:invalid, select:invalid {
+  color: #1b1e35 !important;
+  box-shadow: none !important;
+}
+
+/* Override browser default validation styling */
+input:required:invalid {
+  color: #1b1e35 !important;
+  box-shadow: none !important;
+}
+
+select:required:invalid {
+  color: #1b1e35 !important;
+}

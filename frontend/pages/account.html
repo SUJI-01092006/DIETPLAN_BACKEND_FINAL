@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="header"></div>
+    <div class="card" id="account"></div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+fetch("../components/header.html").then(r=>r.text()).then(t=>header.innerHTML=t);
+
+getData("user").then(d=>{
+  account.innerHTML = `Email: ${d.email}<br>Plan: ${d.plan}`;
+});
+</script>
+</body>
+</html>

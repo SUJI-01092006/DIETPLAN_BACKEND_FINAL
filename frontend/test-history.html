@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History Test</title>
+</head>
+<body>
+    <h1>History Test</h1>
+    <button onclick="testAddHistory()">Add Test History Item</button>
+    <button onclick="testLoadHistory()">Load History</button>
+    <div id="results"></div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        async function testAddHistory() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            console.log('User data:', userData);
+            
+            if (!userData) {
+                alert('Please login first');
+                return;
+            }
+
+            try {
+                const result = await api.addToHistory({
+                    type: 'recipes',
+                    name: 'Test Recipe',
+                    data: { calories: 300, protein: 20 }
+                });
+                console.log('Add history result:', result);
+                document.getElementById('results').innerHTML = 'Added: ' + JSON.stringify(result);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = 'Error: ' + error.message;
+            }
+        }
+
+        async function testLoadHistory() {
+            try {
+                const history = await api.getHistory();
+                console.log('History:', history);
+                document.getElementById('results').innerHTML = 'History: ' + JSON.stringify(history, null, 2);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

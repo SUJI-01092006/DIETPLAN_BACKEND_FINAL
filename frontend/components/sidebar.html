@@ -1,0 +1,39 @@
+<div class="sidebar-brand">
+  <h2>Meal Planner</h2>
+</div>
+<ul class="sidebar-nav">
+  <li><a href="../index.html">Home</a></li>
+  <li><a href="create-plan.html">Create Plan</a></li>
+  <li><a href="meal.html">Meal Planning</a></li>
+  <li><a href="grocery.html">Grocery List</a></li>
+  <li><a href="progress.html">Progress</a></li>
+  <li><a href="recipes.html">Recipes</a></li>
+  <li><a href="history.html">History</a></li>
+  <li id="auth-link"><a href="../login.html">Login</a></li>
+</ul>
+
+<script>
+function updateAuthLink() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const authLink = document.getElementById('auth-link');
+  
+  if (isLoggedIn) {
+    authLink.innerHTML = '<a href="#" onclick="logout()">Logout</a>';
+  } else {
+    authLink.innerHTML = '<a href="../login.html">Login</a>';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('userData');
+  updateAuthLink();
+  window.location.href = '../login.html';
+}
+
+// Update on load
+updateAuthLink();
+
+// Make function globally available
+window.updateAuthLink = updateAuthLink;
+</script>

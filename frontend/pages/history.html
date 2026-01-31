@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>History | Meal Planner</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div class="history-container">
+      <div class="card">
+        <h2>Meal Plan History</h2>
+        <div class="history-filters">
+          <button onclick="filterHistory('all')" class="filter-active">All</button>
+          <button onclick="filterHistory('meals')">Meal Plans</button>
+          <button onclick="filterHistory('recipes')">Recipes</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script>
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+
+let currentFilter = 'all';
+
+function addToHistory(item, type) {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (!userData || !userData.email) return;
+  
+  const userHistoryKey = `mealPlanHistory_${userData.email}`;
+  const history = JSON.parse(localStorage.getItem(userHistoryKey)) || [];
+  const historyItem = {
+    id: Date.now().toString(),
+    type: type,
+    name: item.name || 'Untitled',
+    date: new Date().toISOString(),
+    data: item,
+    userEmail: userData.email
+  };
+
+  history.unshift(historyItem);
+  if (history.length > 50) history.pop();
+
+  // Store in both user-specific and current session
+  localStorage.setItem(userHistoryKey, JSON.stringify(history));
+  localStorage.setItem('mealPlanHistory', JSON.stringify(history));
+  
+  if (window.location.pathname.includes('history.html')) loadHistory();
+}
+
+async function loadHistory() {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (!userData || !userData.email) {
+    document.getElementById('history-list').innerHTML = '<div class="no-history">Please log in to view history.</div>';
+    return;
+  }
+  
+  const userHistoryKey = `mealPlanHistory_${userData.email}`;
+  const history = JSON.parse(localStorage.getItem(userHistoryKey)) || JSON.parse(localStorage.getItem('mealPlanHistory')) || [];
+  const historyList = document.getElementById('history-list');
+
+  let filtered = history;
+  if (currentFilter !== 'all') {
+    filtered = history.filter(item => item.type === currentFilter);
+  }
+  
+  if (filtered.length === 0) {
+    historyList.innerHTML = '<div class="no-history">No history found.</div>';
+    return;
+  }
+  
+  historyList.innerHTML = filtered.map(item => `
+    <div class="history-item">
+      <div class="history-header">
+        <h3>${item.name}</h3>
+        <span class="history-type">${item.type}</span>
+      </div>
+      <div class="history-details">
+        <p>Date: ${new Date(item.date).toLocaleDateString()}</p>
+        ${item.type === 'meals' ? `<p>Calories: ${item.data.totalCalories || 'N/A'}</p>` : ''}
+        ${item.type === 'recipes' ? `<p>Calories: ${item.data.calories || 'N/A'}</p>` : ''}
+      </div>
+      <div class="history-actions">
+        <button onclick="viewItem('${item.id}')">View</button>
+        <button onclick="deleteItem('${item.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterHistory(type) {
+  currentFilter = type;
+  document.querySelectorAll('.history-filters button').forEach(btn => btn.classList.remove('filter-active'));
+  event.target.classList.add('filter-active');
+  loadHistory();
+}
+
+function viewItem(itemId) {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userHistoryKey = `mealPlanHistory_${userData.email}`;
+  const history = JSON.parse(localStorage.getItem(userHistoryKey)) || JSON.parse(localStorage.getItem('mealPlanHistory')) || [];
+  const item = history.find(h => h.id === itemId);
+  if (!item) return;
+  
+  if (item.type === 'meals') {
+    localStorage.setItem('currentMealPlan', JSON.stringify(item.data));
+    window.location.href = 'meal.html';
+  } else if (item.type === 'recipes') {
+    window.location.href = 'recipes.html';
+  }
+}
+
+function deleteItem(itemId) {
+  if (!confirm('Delete this item from history?')) return;
+  
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (!userData || !userData.email) return;
+  
+  const userHistoryKey = `mealPlanHistory_${userData.email}`;
+  let history = JSON.parse(localStorage.getItem('mealPlanHistory')) || [];
+  let userHistory = JSON.parse(localStorage.getItem(userHistoryKey)) || [];
+  
+  // Remove from both histories
+  history = history.filter(h => h.id !== itemId);
+  userHistory = userHistory.filter(h => h.id !== itemId);
+  
+  localStorage.setItem('mealPlanHistory', JSON.stringify(history));
+  localStorage.setItem(userHistoryKey, JSON.stringify(userHistory));
+  
+  loadHistory();
+}
+
+// Make addToHistory globally available
+window.addToHistory = addToHistory;
+
+loadHistory();
+</script>
+</body>
+</html>

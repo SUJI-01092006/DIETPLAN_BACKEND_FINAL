@@ -1,0 +1,263 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: inherit !important;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  width: 100vw;
+  color: #1b1e35;
+}
+
+.app-background {
+  background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+}
+
+.app-main {
+  min-height: 100vh;          /* ✅ changed */
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;            /* ✅ added */
+}
+
+.inner-maximum-width {
+  min-height: 0;
+  position: relative;
+}
+
+.back-to-main {
+  padding: 8px 24px;
+  border-radius: 25px;
+  background-color: rgba(0,0,0,0.3);
+  position: absolute;
+  top: 50px;
+  left: 60px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.back-to-main-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 🔥 MAIN FIX HERE */
+.auth-content {
+  border-radius: 12px;
+  box-shadow: 0 2px 27px 0 rgba(0,0,0,0.07);
+  background-color: #f2f2f9;
+  padding: 16px 20px;         /* ✅ adjusted */
+  width: 400px;
+  min-height: auto;           /* ✅ changed */
+  max-height: 90vh;           /* ✅ added */
+  overflow-y: auto;           /* ✅ added */
+  position: relative;         /* ✅ changed */
+}
+
+.auth-title-signup {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  color: #1b1e35;
+  padding-bottom: 24px;       /* ✅ adjusted */
+}
+
+.social-buttons .btn-auth {
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: 12px;
+  box-shadow: 0 2px 3px 0 rgba(0,0,0,0.07);
+  padding: 14px 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+.social {
+  width: 32px;
+  height: 32px;
+  margin-right: 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.block-line-through {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  margin: 24px 0 8px;
+}
+
+.block-line-through span {
+  font-size: 15px;
+  text-align: center;
+  color: #1b1e35;
+  display: inline-block;
+  padding: 0 20px;
+  background-color: #f2f2f9;
+}
+
+.block-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.07);
+  background-color: #fff;
+  padding: 15px;
+  margin-top: 14px;
+}
+
+.block-wrapper .text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #a1a3b4;
+  margin-bottom: 8px;
+}
+
+.block-wrapper input,
+.block-wrapper select {
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1b1e35 !important;
+  background: transparent;
+  width: 100%;
+  padding: 6px 0;
+}
+
+.block-wrapper input:focus,
+.block-wrapper select:focus {
+  outline: none;
+  border: none;
+  color: #1b1e35 !important;
+}
+
+.block-wrapper input::placeholder,
+.block-wrapper select::placeholder {
+  color: #a1a3b4 !important;
+}
+
+/* Fix for any HTML entity display issues */
+* {
+  color: inherit;
+}
+
+input, select, textarea {
+  color: #1b1e35 !important;
+}
+
+/* Override any browser default red coloring */
+input:invalid {
+  color: #1b1e35 !important;
+  box-shadow: none !important;
+}
+
+select:invalid {
+  color: #1b1e35 !important;
+}
+
+.continue-text {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  padding: 14px;
+  border-radius: 16px;
+  background-color: #f46708;
+  width: 100%;
+  margin-top: 20px;           /* ✅ adjusted */
+  border: none;
+  cursor: pointer;
+}
+
+.already-have-account {
+  margin-top: 24px;           /* ✅ adjusted */
+  text-align: center;
+}
+
+.already-have-account a {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1b1e35;
+  text-decoration: none;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.forgot-password a {
+  font-size: 14px;
+  color: #f46708;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-content p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .auth-content {
+    width: 100%;
+    max-height: none;
+    padding: 16px;
+    border-radius: 0;
+  }
+
+  .app-background {
+    background-image: none;
+    background-color: #f2f2f9;
+  }
+
+  .app-main {
+    background: transparent;
+    padding: 0;
+  }
+
+  .back-to-main {
+    position: relative;
+    top: 20px;
+    left: 20px;
+  }
+}

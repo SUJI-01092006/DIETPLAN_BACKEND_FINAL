@@ -1,0 +1,12 @@
+{
+  "name": "meal-planner-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Meal Planner App",
+  "scripts": {
+    "dev": "live-server --port=3000",
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

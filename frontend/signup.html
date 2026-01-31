@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Up | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <div class="app-background">
+    <div class="app-main">
+      <div class="inner-maximum-width">
+        <div class="auth-content">
+          <div class="auth-title-signup">Sign Up</div>
+          <form id="signupForm">
+            <div class="block-wrapper">
+              <div class="text">Full Name</div>
+              <input type="text" id="name" required>
+            </div>
+            <div class="block-wrapper">
+              <div class="text">Email</div>
+              <input type="email" id="email" required>
+            </div>
+            <div class="block-wrapper">
+              <div class="text">Password</div>
+              <input type="password" id="password" required>
+            </div>
+            <div class="block-wrapper">
+              <div class="text">Confirm Password</div>
+              <input type="password" id="confirmPassword" required>
+            </div>
+            <div class="block-wrapper">
+              <div class="text">Primary Goal</div>
+              <select id="goal" required>
+                <option value="">Select your goal</option>
+                <option value="weight-loss">Weight Loss</option>
+                <option value="maintenance">Healthy Living/Maintenance</option>
+                <option value="muscle-gain">Build Muscle/Bodybuilding</option>
+              </select>
+            </div>
+            <button type="submit" class="continue-text">Create My Account</button>
+          </form>
+          <div class="already-have-account">
+            <a href="login.html">Already have an account? Log in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const goal = document.getElementById('goal').value;
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      if (name && email && password && goal) {
+        try {
+          // Save user to database
+          const response = await fetch('https://dietplan-backend-final.onrender.com/api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              password: password,
+              goal: goal
+            })
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            // Clear any existing history for new user
+            localStorage.removeItem('mealPlanHistory');
+            
+            // Store user data and login status
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userData', JSON.stringify({
+              _id: result.user._id,
+              name: name,
+              email: email,
+              goal: goal,
+              createdAt: new Date().toISOString()
+            }));
+            
+            // Update sidebar if function exists
+            if (window.updateAuthLink) {
+              window.updateAuthLink();
+            }
+            
+            alert('Account created successfully!');
+            window.location.href = 'index.html';
+          } else {
+            const errorData = await response.json();
+            if (errorData.error && errorData.error.includes('E11000') && errorData.error.includes('email')) {
+              alert('An account with this email already exists. Please use a different email or try logging in.');
+            } else {
+              alert('Error creating account: ' + (errorData.error || 'Unknown error'));
+            }
+          }
+        } catch (error) {
+          alert('Network error. Please check if the server is running and try again.');
+        }
+      }
+    });
+  </script>
+
+  <style>
+    /* Ensure same background as login page */
+    .app-background {
+      background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3') !important;
+      background-repeat: no-repeat !important;
+      background-attachment: fixed !important;
+      background-position: center !important;
+      background-size: cover !important;
+    }
+  </style>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2023 My Diet Meal Plan. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

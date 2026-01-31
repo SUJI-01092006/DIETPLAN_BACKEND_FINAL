@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meal Planner | My Diet Meal Plan</title>
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/meal-planner.css">
+</head>
+<body>
+
+<div class="app">
+  <div id="sidebar"></div>
+  
+  <div class="main">
+    <div id="header"></div>
+    
+    <div class="content">
+      <div class="meal-planner-header">
+        <h1>Weekly Meal Planner</h1>
+        <div class="planner-controls">
+          <button class="btn-create-plan" onclick="window.location.href='create-plan.html'">Create New Plan</button>
+          <button class="btn-generate">Generate Meal Plan</button>
+          <button class="btn-save">Save Plan</button>
+          <button class="btn-download">Download PDF</button>
+        </div>
+      </div>
+
+      <div class="nutrition-targets">
+        <div class="target-card">
+          <span class="target-label">Daily Calories</span>
+          <span class="target-value">2000</span>
+        </div>
+        <div class="target-card">
+          <span class="target-label">Protein</span>
+          <span class="target-value">150g</span>
+        </div>
+        <div class="target-card">
+          <span class="target-label">Carbs</span>
+          <span class="target-value">250g</span>
+        </div>
+        <div class="target-card">
+          <span class="target-label">Fat</span>
+          <span class="target-value">67g</span>
+        </div>
+      </div>
+
+      <div class="meal-planner-grid">
+        <div class="day-column">
+          <h3>Monday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Oatmeal with Berries</h4>
+              <p>320 cal • 12g protein • 45g carbs • 8g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Grilled Chicken Salad</h4>
+              <p>450 cal • 35g protein • 20g carbs • 25g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Baked Salmon</h4>
+              <p>520 cal • 40g protein • 15g carbs • 30g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Greek Yogurt</h4>
+              <p>150 cal • 15g protein • 12g carbs • 6g fat</p>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 1440 cal</strong>
+          </div>
+        </div>
+
+        <div class="day-column">
+          <h3>Tuesday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Avocado Toast</h4>
+              <p>280 cal • 8g protein • 30g carbs • 18g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Quinoa Bowl</h4>
+              <p>380 cal • 16g protein • 55g carbs • 12g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Beef Stir Fry</h4>
+              <p>480 cal • 32g protein • 25g carbs • 28g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Protein Smoothie</h4>
+              <p>200 cal • 20g protein • 15g carbs • 8g fat</p>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 1340 cal</strong>
+          </div>
+        </div>
+
+        <div class="day-column">
+          <h3>Wednesday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Scrambled Eggs</h4>
+              <p>300 cal • 18g protein • 5g carbs • 24g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Turkey Sandwich</h4>
+              <p>420 cal • 28g protein • 45g carbs • 15g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Pasta Primavera</h4>
+              <p>450 cal • 18g protein • 65g carbs • 16g fat</p>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="swap-btn">🔄</button>
+            </div>
+            <div class="meal-content">
+              <h4>Mixed Nuts</h4>
+              <p>180 cal • 6g protein • 8g carbs • 16g fat</p>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 1350 cal</strong>
+          </div>
+        </div>
+
+        <div class="day-column">
+          <h3>Thursday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 0 cal</strong>
+          </div>
+        </div>
+
+        <div class="day-column">
+          <h3>Friday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 0 cal</strong>
+          </div>
+        </div>
+
+        <div class="day-column">
+          <h3>Saturday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 0 cal</strong>
+          </div>
+        </div>
+
+        <div class="day-column">
+          <h3>Sunday</h3>
+          <div class="meal-slot breakfast">
+            <div class="meal-header">
+              <span class="meal-type">Breakfast</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot lunch">
+            <div class="meal-header">
+              <span class="meal-type">Lunch</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot dinner">
+            <div class="meal-header">
+              <span class="meal-type">Dinner</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="meal-slot snack">
+            <div class="meal-header">
+              <span class="meal-type">Snack</span>
+              <button class="add-meal-btn">+ Add Meal</button>
+            </div>
+          </div>
+          
+          <div class="daily-total">
+            <strong>Total: 0 cal</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/meal-planner.js"></script>
+<script>
+fetch("../components/sidebar.html").then(r=>r.text()).then(t=>sidebar.innerHTML=t);
+fetch("../components/header.html").then(r=>r.text()).then(t=>{
+  header.innerHTML = t;
+  document.querySelector('.header-title').textContent = 'Meal Planner';
+});
+</script>
+</body>
+</html>
